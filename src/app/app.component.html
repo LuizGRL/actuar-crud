@@ -1,6 +1,20 @@
-  <h2>Lista de Usuários</h2>
-  <ul>
-    <li>
-    </li>
-  </ul>
+<h2>Lista de Entidades</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Sexo</th>
+      <th>Data Nascimento</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let aluno of alunos">
+      <td>{{ aluno.nome }}</td>
+      <td>{{ aluno.email }}</td>
+      <td>{{ aluno.sexo }}</td>
+      <td>{{ aluno.dataNascimento }}</td>
 
+    </tr>
+  </tbody>
+</table>
