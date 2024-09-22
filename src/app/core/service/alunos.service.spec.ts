@@ -95,4 +95,78 @@ describe('AlunoService', () => {
     expect(retorno1).toBe(false)
   });
 
+  it("Deve retornar erro ao verificar que a lista esta vazia na tentativa de remover aluno",()=>{
+    const alunos = service.carregarTodosOsAlunos();
+    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+    const retorno = service.removerAluno(novoAluno);
+
+    expect(retorno).toBe("Não existem elementos para serem excluidos");
+    expect(alunos.length).toEqual(0);
+  });
+
+  it("Deve retornar erro ao verificar que o usuário solicitado para exclusão não esta na lista",()=>{
+    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+    const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+    service.criarAluno(novoAluno);
+    const retorno = service.removerAluno(novoAluno2);
+
+    expect(retorno).toBe("Aluno não econtrado");
+    expect(service.validarEmailLivre(novoAluno.email)).toEqual(false);
+  });
+
+  it("Deve excluir corretamente o usuário",()=>{
+    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+    const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+    service.criarAluno(novoAluno);
+    service.criarAluno(novoAluno2);
+    const listaTamanhoAntes = service.carregarTodosOsAlunos().length
+    const retorno = service.removerAluno(novoAluno);
+    const listaTamanhoDepois = service.carregarTodosOsAlunos().length
+
+    expect(retorno).toBe("Removido com sucesso");
+    expect(listaTamanhoAntes).toBeGreaterThan(listaTamanhoDepois);
+    expect(service.buscarAlunoPorEmail(novoAluno2.email)).not.toBeNull();
+    expect(service.buscarAlunoPorEmail(novoAluno.email)).toBeNull();
+  });
+
+  it("Deve falhar ao tentar editar um aluno com um email ja cadastrado",()=>{
+    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+    const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+    service.criarAluno(novoAluno);
+    service.criarAluno(novoAluno2);
+    const novoAlunoNovaInstancia = new Aluno('Marcos Almeida', 'M', 'bia12@gmail.com', new Date('2000-01-01'));
+    const retorno = service.editarAluno(novoAluno,novoAlunoNovaInstancia);
+
+    expect(retorno).toBe("Novo email já esta sendo usado por uma outra conta");
+    expect(service.validarEmailLivre(novoAluno.email)).toBeFalse();
+
+
+  });
+
+  it("Deve falhar ao tentar editar um aluno que não foi encontrado",()=>{
+    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+    service.criarAluno(novoAluno);
+    const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+    const novoAluno2NovaInstancia = new Aluno('Bianca Andrades', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+    const retorno = service.editarAluno(novoAluno2,novoAluno2NovaInstancia);
+
+    expect(retorno).toBe("Aluno não encontrado");
+
+
+  });
+  it("Deve editar corretamente um aluno",()=>{
+    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+    const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+    service.criarAluno(novoAluno);
+    service.criarAluno(novoAluno2);
+    const novoAlunoNovaInstancia = new Aluno("Carlos Almeida","M", "carlos223@gmail.com",new Date('2000-01-01'));
+    const novoAluno2NovaInstancia = new Aluno('Bianca Andrade', 'F', 'bia12@gmail.com', new Date('2000-03-10'));
+    const retornoAluno1 = service.editarAluno(novoAluno,novoAlunoNovaInstancia);
+    const retornoAluno2 = service.editarAluno(novoAluno2,novoAluno2NovaInstancia);
+
+    expect(service.buscarAlunoPorEmail(novoAluno.email)).toBeNull();
+    expect(service.buscarAlunoPorEmail(novoAluno2.email)).toEqual(novoAluno2NovaInstancia);
+    expect(service.buscarAlunoPorEmail(novoAlunoNovaInstancia.email)).toEqual(novoAlunoNovaInstancia);
+  });
+
 });

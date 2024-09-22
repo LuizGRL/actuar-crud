@@ -58,13 +58,13 @@ export class AlunoService{
   removerAluno(aluno: Aluno) : string{
     const alunos = this.carregarTodosOsAlunos();
 
-    if(AlunoService.length<1){
+    if(alunos.length<1){
       return "Não existem elementos para serem excluidos";
     }
 
     const indexAluno = alunos.findIndex(elemento => elemento.email.toLowerCase() == aluno.email.toLowerCase())
 
-    if(indexAluno==null){
+    if(indexAluno==-1){
       return "Aluno não econtrado";
     }
 
@@ -76,7 +76,7 @@ export class AlunoService{
   editarAluno(alunoInstanciaAntiga : Aluno, alunoNovaInstancia: Aluno) : String{
     const alunos = this.carregarTodosOsAlunos();
 
-    if(this.validarEmailLivre(alunoNovaInstancia.email)==false){
+    if(this.validarEmailLivre(alunoNovaInstancia.email)==false && alunoNovaInstancia.email.toLowerCase() !== alunoInstanciaAntiga.email.toLowerCase()){
       return "Novo email já esta sendo usado por uma outra conta"
     }
 
