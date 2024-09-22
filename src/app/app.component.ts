@@ -3,12 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import { AlunoService } from './core/service/aluno.service';
 import { Aluno } from './core/entity/aluno.model';
 import { CommonModule } from '@angular/common';
+import { AlunosTableComponent } from "./alunos/components/alunos-table/alunos-table.component";
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,CommonModule],
+  imports: [RouterOutlet, CommonModule, AlunosTableComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 
@@ -18,7 +19,7 @@ export class AppComponent implements AfterViewInit{
 
   alunos: Aluno[] = [];
 
-  constructor(private alunoService: AlunoService) {} //injetando depedencia
+  constructor(private alunoService: AlunoService) {}
 
   ngAfterViewInit(){
     const storedAlunos = this.alunoService.carregarTodosOsAlunos();
