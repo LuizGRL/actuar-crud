@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { AlunoService } from './aluno.service';
 import { Aluno } from '../entity/aluno.model';
-import { HttpClientTestingModule } from '@angular/common/http/testing'; // Importação do módulo
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {HttpClientModule} from '@angular/common/http';
+
 import { of } from 'rxjs';
 
 
@@ -14,6 +16,19 @@ describe('AlunoService', () => {
       providers: [AlunoService],
     });    service = TestBed.inject(AlunoService);
     localStorage.clear();
+  });
+  it('deve carregar alunos do localStorage', () => {
+    const aluno1 = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+    const aluno2 = new Aluno('Maria Silva', 'F', 'maria.silva@gmail.com', new Date('2001-02-01'));
+
+    // Armazenando alunos no localStorage para teste
+    localStorage.setItem('alunos', JSON.stringify([aluno1, aluno2]));
+
+    const alunosCarregados = service.carregarTodosOsAlunos();
+
+    expect(alunosCarregados.length).toBe(2);
+    expect(alunosCarregados[0].Nome).toBe(aluno1.Nome);
+    expect(alunosCarregados[1].Nome).toBe(aluno2.Nome);
   });
 
   it('deve criar um aluno',()=>{
@@ -151,31 +166,35 @@ describe('AlunoService', () => {
     expect(service.buscarAlunoPorEmail(novoAluno.Email)).toBeNull();
   });
 
-  it("Deve falhar ao tentar editar um aluno com um Email ja cadastrado",()=>{
+  it("Deve falhar ao tentar editar um aluno com um Email já cadastrado", (done) => {
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+
     service.criarAluno(novoAluno);
     service.criarAluno(novoAluno2);
+
     const novoAlunoNovaInstancia = new Aluno('Marcos Almeida', 'M', 'bia12@gmail.com', new Date('2000-01-01'));
-    const retorno = service.editarAluno(novoAluno,novoAlunoNovaInstancia);
 
-    expect(retorno).toBe("Novo Email já esta sendo usado por uma outra conta");
-    expect(service.validarEmailLivre(novoAluno.Email)).toBeFalse();
-
-
+    service.editarAluno(novoAluno, novoAlunoNovaInstancia).subscribe((retorno) => {
+        expect(retorno).toBe("Novo Email já esta sendo usado por uma outra conta");
+        expect(service.validarEmailLivre(novoAluno.Email)).toBeFalse();
+        done();
+    });
   });
 
-  it("Deve falhar ao tentar editar um aluno que não foi encontrado",()=>{
+
+  it("Deve falhar ao tentar editar um aluno que não foi encontrado", (done) => {
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     service.criarAluno(novoAluno);
     const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
     const novoAluno2NovaInstancia = new Aluno('Bianca Andrades', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
-    const retorno = service.editarAluno(novoAluno2,novoAluno2NovaInstancia);
 
-    expect(retorno).toBe("Aluno não encontrado");
-
-
+    service.editarAluno(novoAluno2, novoAluno2NovaInstancia).subscribe((retorno) => {
+        expect(retorno).toBe("Aluno não encontrado");
+        done();
+    });
   });
+
   it("Deve editar corretamente um aluno",()=>{
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));

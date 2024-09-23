@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Aluno } from "../entity/aluno.model";
 import { HttpClient } from "@angular/common/http";
+import { HttpClientModule } from '@angular/common/http';
 import { elementAt, Observable, map ,tap , of, BehaviorSubject } from "rxjs";
 
 
@@ -35,9 +36,9 @@ export class AlunoService{
       new Aluno(aluno.Nome, aluno.Sexo, aluno.Email, new Date(aluno.DataNascimento))) : [];
   }
 
-  buscarAlunoPorEmail(Email: string): Aluno | null{
+  buscarAlunoPorEmail(email: string): Aluno | null{
     const alunos = this.carregarTodosOsAlunos();
-    const aluno = alunos.find(elemento=> elemento.Email.toLowerCase() == Email.toLowerCase());
+    const aluno = alunos.find(elemento=> elemento.Email.toLowerCase() == email.toLowerCase());
     return aluno || null;
   }
 
@@ -91,24 +92,24 @@ export class AlunoService{
     return "Removido com sucesso";
   }
 
-  editarAluno(alunoInstanciaAntiga : Aluno, alunoNovaInstancia: Aluno) : String{
+  editarAluno(alunoInstanciaAntiga: Aluno, alunoNovaInstancia: Aluno): Observable<string> {
     const alunos = this.carregarTodosOsAlunos();
 
-    if(this.validarEmailLivre(alunoNovaInstancia.Email)==false && alunoNovaInstancia.Email.toLowerCase() !== alunoInstanciaAntiga.Email.toLowerCase()){
-      return "Novo Email já esta sendo usado por uma outra conta"
+    if (!this.validarEmailLivre(alunoNovaInstancia.Email) && alunoNovaInstancia.Email.toLowerCase() !== alunoInstanciaAntiga.Email.toLowerCase()) {
+      return of("Novo Email já está sendo usado por uma outra conta");
     }
 
     const alunoIndex = alunos.findIndex(
-      elemento => elemento.Email.toLowerCase() == alunoInstanciaAntiga.Email.toLowerCase());
+      elemento => elemento.Email.toLowerCase() === alunoInstanciaAntiga.Email.toLowerCase()
+    );
 
-    if(alunoIndex!==-1){
+    if (alunoIndex !== -1) {
       alunos[alunoIndex] = alunoNovaInstancia;
-      localStorage.setItem('alunos',JSON.stringify(alunos));
-      return "Aluno editado com sucesso";
-    }else{
-      return "Aluno não encontrado"
+      localStorage.setItem('alunos', JSON.stringify(alunos));
+      return of("Aluno editado com sucesso");
+    } else {
+      return of("Aluno não encontrado");
     }
-
   }
 
   validarEmailLivre(Email:string) : boolean{
