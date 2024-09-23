@@ -1,18 +1,18 @@
 export class Aluno{
-  nome: string;
-  sexo: string;
-  email: string;
-  dataNascimento: Date;
+  Nome: string;
+  Sexo: string;
+  Email: string;
+  DataNascimento: Date;
 
-  constructor(nome: string, sexo: string, email: string, dataNascimento: Date){
-    this.nome = nome;
-    this.sexo = sexo;
-    this.email = email;
-    this.dataNascimento = dataNascimento;
+  constructor(Nome: string, Sexo: string, Email: string, DataNascimento: Date){
+    this.Nome = Nome;
+    this.Sexo = Sexo;
+    this.Email = Email;
+    this.DataNascimento = DataNascimento;
   }
 
   toString() : string{
-    return `Nome: ${this.nome}, Sexo: ${this.sexo}, Email: ${this.email}, Data de Nascimento: ${this.dataNascimento}`;
+    return `Nome: ${this.Nome}, Sexo: ${this.Sexo}, Email: ${this.Email}, Data de Nascimento: ${this.DataNascimento}`;
   }
 
 }

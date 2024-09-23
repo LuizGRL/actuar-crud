@@ -1,0 +1,25 @@
+.div-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.form-field{
+  width: 300px;
+}
+.button-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+button{
+  background-color: #2196f3;
+  border-radius: 12px;
+}
+

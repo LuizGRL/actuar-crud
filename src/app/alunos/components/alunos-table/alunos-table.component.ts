@@ -6,11 +6,13 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { AlunoService } from '../../../core/service/aluno.service';
 import { Aluno } from '../../../core/entity/aluno.model';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
+import { AlunosFormCreateComponent } from "../alunos-form/alunos-form-create/alunos-form-create.component";
 
 @Component({
   selector: 'app-alunos-table',
   standalone: true,
-  imports: [MatTableModule,MatSortModule,MatPaginatorModule,CommonModule],
+  imports: [MatTableModule, MatSortModule, MatPaginatorModule, CommonModule, ToolbarComponent, AlunosFormCreateComponent],
   templateUrl: './alunos-table.component.html',
   styleUrl: './alunos-table.component.scss'
 })
@@ -20,14 +22,14 @@ export class AlunosTableComponent implements AfterViewInit  {
   private alunoService = inject(AlunoService);
 
   clickedRows = new Set<Aluno>();
-  columns: string[] = ['nome', 'email', 'dataNascimento','sexo'];
+  columns: string[] = ['Nome', 'Email', 'DataNascimento','Sexo'];
   data = new MatTableDataSource<Aluno>();
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
-    this.alunoService.getAlunos().subscribe((alunos) => {
+    this.alunoService.alunos$.subscribe((alunos) => {
       this.data.data = alunos;
     });
   }

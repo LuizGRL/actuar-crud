@@ -1,1 +1,42 @@
-<p>alunos-form-create works!</p>
+<body>
+  <div class="div-form-container">
+    <h3>Cadastro de Aluno</h3>
+
+    <form class="form-container" [formGroup]="alunoForm" (ngSubmit)="salvarAluno()">
+      <mat-form-field class="form-field">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="Nome">
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="Email" placeholder="Ex. pat@example.com">
+
+
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Escolher uma data</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="DataNascimento">
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Sexo</mat-label>
+        <mat-select formControlName="Sexo">
+          <mat-option value="M">Masculino</mat-option>
+          <mat-option value="F">Feminino</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="button-container">
+        <button mat-fab extended type="submit">
+          Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</body>

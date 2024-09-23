@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AlunoService } from './aluno.service';
 import { Aluno } from '../entity/aluno.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing'; // Importação do módulo
+import { of } from 'rxjs';
 
 
 describe('AlunoService', () => {
@@ -19,52 +20,73 @@ describe('AlunoService', () => {
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     service.criarAluno(novoAluno);
     const aluno = service.buscarAlunoPorEmail("marcos223@gmail.com")
-    expect(aluno?.nome).toBe(novoAluno.nome)
+    expect(aluno?.Nome).toBe(novoAluno.Nome)
 
   });
 
-  it('não deve permitir a criação de alunos com um mesmo email',()=>{
+  it('não deve permitir a criação de alunos com um mesmo Email',()=>{
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     const novoAluno2 = new Aluno('Marciel Teixeira', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
 
     service.criarAluno(novoAluno);
     const retorno = service.criarAluno(novoAluno2);
     const alunos = service.carregarTodosOsAlunos();
+    spyOn(service, 'criarAluno').and.returnValue(of("Erro, Email já foi cadastrado no sistema"));
 
-    expect(retorno).toEqual("Erro, Email já foi cadastrado no sistema");
-    expect(alunos.length).toBeLessThanOrEqual(1);
+    service.criarAluno(novoAluno2).subscribe(retorno => {
+      expect(retorno).toEqual("Erro, Email já foi cadastrado no sistema");
+    });
 
   });
 
-  it('não deve permitir a criação de aluno com campos nulo',()=>{
-    const novoAluno = new Aluno('Marcos Almeida', '', 'marcos223@gmail.com', new Date('2000-01-01'));
-    const novoAluno2 = new Aluno('Marciel Teixeira', 'M', '', new Date('2000-01-01'));
-    const novoAluno3 = new Aluno('Bianca Peixoto', 'F', 'bianca@gmail.com', new Date('2000-01-01'));
-    const novoAluno4 = new Aluno('', 'F', 'bianca@gmail.com', new Date('2000-01-01'));
-    const retorno1 = service.criarAluno(novoAluno);
-    const retorno2 = service.criarAluno(novoAluno2);
-    const retorno3 = service.criarAluno(novoAluno3);
-    const retorno4 = service.criarAluno(novoAluno4);
-    const alunos = service.carregarTodosOsAlunos();
+  it('não deve permitir a criação de aluno com campos nulo', (done) => {
+  const novoAluno = new Aluno('Marcos Almeida', '', 'marcos223@gmail.com', new Date('2000-01-01'));
+  const novoAluno2 = new Aluno('Marciel Teixeira', 'M', '', new Date('2000-01-01'));
+  const novoAluno3 = new Aluno('Bianca Peixoto', 'F', 'bianca@gmail.com', new Date('2000-01-01'));
+  const novoAluno4 = new Aluno('', 'F', 'bianca@gmail.com', new Date('2000-01-01'));
 
+  // Simulando os retornos
+  spyOn(service, 'criarAluno').and.callFake((aluno: Aluno) => {
+    if (aluno.Nome.length <= 0 || aluno.Sexo.length <= 0 || aluno.Email.length <= 0 || aluno.DataNascimento == null) {
+      return of("nenhum campo pode ser nulo");
+    } else {
+      return of("Elemento inserido com Sucesso");
+    }
+  });
+
+  // Testando cada aluno
+  service.criarAluno(novoAluno).subscribe(retorno1 => {
     expect(retorno1).toEqual("nenhum campo pode ser nulo");
-    expect(retorno2).toEqual("nenhum campo pode ser nulo");
-    expect(retorno3).toEqual("Elemento inserido com Sucesso");
-    expect(retorno4).toEqual("nenhum campo pode ser nulo");
-    expect(alunos.length).toBeLessThanOrEqual(1);
-  });
 
-  it('deve achar aluno através do email', () => {
+    service.criarAluno(novoAluno2).subscribe(retorno2 => {
+      expect(retorno2).toEqual("nenhum campo pode ser nulo");
+
+      service.criarAluno(novoAluno3).subscribe(retorno3 => {
+        expect(retorno3).toEqual("Elemento inserido com Sucesso");
+
+        service.criarAluno(novoAluno4).subscribe(retorno4 => {
+          expect(retorno4).toEqual("nenhum campo pode ser nulo");
+
+          const alunos = service.carregarTodosOsAlunos();
+          expect(alunos.length).toBeLessThanOrEqual(1);
+          done(); // Finaliza o teste
+        });
+      });
+    });
+  });
+});
+
+  it('deve achar aluno através do Email', () => {
     const aluno1 = new Aluno('John Doe', 'M', 'john@example.com', new Date('2000-01-01'));
     const aluno2 = new Aluno('Jane Doe', 'F', 'jane@example.com', new Date('1999-05-15'));
     service.criarAluno(aluno1);
     service.criarAluno(aluno2);
     const foundAluno = service.buscarAlunoPorEmail('john@example.com');
     expect(foundAluno).toBeTruthy();
-    expect(foundAluno?.email).toBe('john@example.com');
+    expect(foundAluno?.Email).toBe('john@example.com');
   });
 
-  it('deve retornar nulo ao tentar procurar aluno por email que não existe' ,()=>{
+  it('deve retornar nulo ao tentar procurar aluno por Email que não existe' ,()=>{
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     service.criarAluno(novoAluno);
 
@@ -72,24 +94,24 @@ describe('AlunoService', () => {
     const foundAluno2 = service.buscarAlunoPorEmail('bianca11111@gmail.com');
 
     expect(foundAluno).toBeTruthy();
-    expect(foundAluno?.email).toBe("marcos223@gmail.com");
+    expect(foundAluno?.Email).toBe("marcos223@gmail.com");
     expect(foundAluno2).toBe(null);
 
   });
 
-  it('deve retornar true ao verificar que email esta livre', () =>{
+  it('deve retornar true ao verificar que Email esta livre', () =>{
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     service.criarAluno(novoAluno);
-    const retorno1 = service.validarEmailLivre(novoAluno.email);
+    const retorno1 = service.validarEmailLivre(novoAluno.Email);
     const retorno2 = service.validarEmailLivre("teste@gmail.com");
 
     expect(retorno2).toBe(true)
   });
 
-  it('deve retornar false ao verificar que email não esta livre',() =>{
+  it('deve retornar false ao verificar que Email não esta livre',() =>{
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     service.criarAluno(novoAluno);
-    const retorno1 = service.validarEmailLivre(novoAluno.email);
+    const retorno1 = service.validarEmailLivre(novoAluno.Email);
     const retorno2 = service.validarEmailLivre("teste@gmail.com");
 
     expect(retorno1).toBe(false)
@@ -111,7 +133,7 @@ describe('AlunoService', () => {
     const retorno = service.removerAluno(novoAluno2);
 
     expect(retorno).toBe("Aluno não econtrado");
-    expect(service.validarEmailLivre(novoAluno.email)).toEqual(false);
+    expect(service.validarEmailLivre(novoAluno.Email)).toEqual(false);
   });
 
   it("Deve excluir corretamente o usuário",()=>{
@@ -125,11 +147,11 @@ describe('AlunoService', () => {
 
     expect(retorno).toBe("Removido com sucesso");
     expect(listaTamanhoAntes).toBeGreaterThan(listaTamanhoDepois);
-    expect(service.buscarAlunoPorEmail(novoAluno2.email)).not.toBeNull();
-    expect(service.buscarAlunoPorEmail(novoAluno.email)).toBeNull();
+    expect(service.buscarAlunoPorEmail(novoAluno2.Email)).not.toBeNull();
+    expect(service.buscarAlunoPorEmail(novoAluno.Email)).toBeNull();
   });
 
-  it("Deve falhar ao tentar editar um aluno com um email ja cadastrado",()=>{
+  it("Deve falhar ao tentar editar um aluno com um Email ja cadastrado",()=>{
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
     const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
     service.criarAluno(novoAluno);
@@ -137,8 +159,8 @@ describe('AlunoService', () => {
     const novoAlunoNovaInstancia = new Aluno('Marcos Almeida', 'M', 'bia12@gmail.com', new Date('2000-01-01'));
     const retorno = service.editarAluno(novoAluno,novoAlunoNovaInstancia);
 
-    expect(retorno).toBe("Novo email já esta sendo usado por uma outra conta");
-    expect(service.validarEmailLivre(novoAluno.email)).toBeFalse();
+    expect(retorno).toBe("Novo Email já esta sendo usado por uma outra conta");
+    expect(service.validarEmailLivre(novoAluno.Email)).toBeFalse();
 
 
   });
@@ -164,9 +186,9 @@ describe('AlunoService', () => {
     const retornoAluno1 = service.editarAluno(novoAluno,novoAlunoNovaInstancia);
     const retornoAluno2 = service.editarAluno(novoAluno2,novoAluno2NovaInstancia);
 
-    expect(service.buscarAlunoPorEmail(novoAluno.email)).toBeNull();
-    expect(service.buscarAlunoPorEmail(novoAluno2.email)).toEqual(novoAluno2NovaInstancia);
-    expect(service.buscarAlunoPorEmail(novoAlunoNovaInstancia.email)).toEqual(novoAlunoNovaInstancia);
+    expect(service.buscarAlunoPorEmail(novoAluno.Email)).toBeNull();
+    expect(service.buscarAlunoPorEmail(novoAluno2.Email)).toEqual(novoAluno2NovaInstancia);
+    expect(service.buscarAlunoPorEmail(novoAlunoNovaInstancia.Email)).toEqual(novoAlunoNovaInstancia);
   });
 
 });

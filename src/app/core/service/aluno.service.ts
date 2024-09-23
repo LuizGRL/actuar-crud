@@ -1,21 +1,24 @@
 import { Injectable } from "@angular/core";
 import { Aluno } from "../entity/aluno.model";
 import { HttpClient } from "@angular/common/http";
-import { elementAt, Observable } from "rxjs";
-import { map } from "rxjs";
+import { elementAt, Observable, map ,tap , of, BehaviorSubject } from "rxjs";
+
 
 @Injectable({providedIn:'root'}) //para ficar visivel em tood o projeto
 export class AlunoService{
   private apiUrl = 'https://6467a872e99f0ba0a814b5ff.mockapi.io/api/Pessoas';
+   private alunosSubject = new BehaviorSubject<Aluno[]>(this.carregarTodosOsAlunos());
+  public alunos$ = this.alunosSubject.asObservable();
 
   constructor(private http: HttpClient){} //para injetar o procolo HTTP
 
   getAlunos(): Observable<Aluno[]> {
-    return this.http.get<any[]>(this.apiUrl).pipe(
-      map((response: any[]) => {
+    return this.http.get<Aluno[]>(this.apiUrl).pipe(
+      map((response: Aluno[]) => {
         const apiAlunos = response.map(aluno =>
           new Aluno(aluno.Nome, aluno.Sexo, aluno.Email, new Date(aluno.DataNascimento))
         );
+        console.log(apiAlunos)
         const localAlunos = this.carregarTodosOsAlunos();
         return [...apiAlunos, ...localAlunos];
       })
@@ -29,31 +32,46 @@ export class AlunoService{
   carregarTodosOsAlunos(): Aluno[]{
     const alunos = localStorage.getItem('alunos');
     return alunos ? JSON.parse(alunos).map((aluno:any)=>
-      new Aluno(aluno.nome, aluno.sexo, aluno.email, new Date(aluno.dataNascimento))) : [];
+      new Aluno(aluno.Nome, aluno.Sexo, aluno.Email, new Date(aluno.DataNascimento))) : [];
   }
 
-  buscarAlunoPorEmail(email: string): Aluno | null{
+  buscarAlunoPorEmail(Email: string): Aluno | null{
     const alunos = this.carregarTodosOsAlunos();
-    const aluno = alunos.find(elemento=> elemento.email.toLowerCase() == email.toLowerCase());
+    const aluno = alunos.find(elemento=> elemento.Email.toLowerCase() == Email.toLowerCase());
     return aluno || null;
   }
 
-  criarAluno(aluno: Aluno): string {
-    if(aluno.nome.length <= 0 || aluno.sexo.length <= 0||aluno.email.length <= 0||aluno.dataNascimento == null){
-      return "nenhum campo pode ser nulo"
-    }
-    const alunos = this.carregarTodosOsAlunos();
-
-    if(alunos.length>0){
-      if(this.validarEmailLivre(aluno.email)==false){
-        return "Erro, Email já foi cadastrado no sistema"
-      }
-    }
-
-    alunos.push(aluno)
-    localStorage.setItem('alunos',JSON.stringify(alunos))
-    return "Elemento inserido com Sucesso"
+  atualizarAlunos() {
+    this.getAlunos().subscribe(alunos => {
+      this.alunosSubject.next(alunos);
+    });
   }
+
+  criarAluno(aluno: Aluno): Observable<string> {
+    return new Observable(observer => {
+      if (aluno.Nome.length <= 0 || aluno.Sexo.length <= 0 || aluno.Email.length <= 0 || aluno.DataNascimento == null) {
+        observer.next("nenhum campo pode ser nulo");
+        observer.complete();
+        return;
+      }
+
+      const alunos = this.carregarTodosOsAlunos();
+
+      if (alunos.length > 0) {
+        if (!this.validarEmailLivre(aluno.Email)) {
+          observer.next("Erro, Email já foi cadastrado no sistema");
+          observer.complete();
+          return;
+        }
+      }
+
+      alunos.push(aluno);
+      localStorage.setItem('alunos', JSON.stringify(alunos));
+      observer.next("Elemento inserido com Sucesso");
+      observer.complete();
+    });
+  }
+
 
   removerAluno(aluno: Aluno) : string{
     const alunos = this.carregarTodosOsAlunos();
@@ -62,7 +80,7 @@ export class AlunoService{
       return "Não existem elementos para serem excluidos";
     }
 
-    const indexAluno = alunos.findIndex(elemento => elemento.email.toLowerCase() == aluno.email.toLowerCase())
+    const indexAluno = alunos.findIndex(elemento => elemento.Email.toLowerCase() == aluno.Email.toLowerCase())
 
     if(indexAluno==-1){
       return "Aluno não econtrado";
@@ -76,12 +94,12 @@ export class AlunoService{
   editarAluno(alunoInstanciaAntiga : Aluno, alunoNovaInstancia: Aluno) : String{
     const alunos = this.carregarTodosOsAlunos();
 
-    if(this.validarEmailLivre(alunoNovaInstancia.email)==false && alunoNovaInstancia.email.toLowerCase() !== alunoInstanciaAntiga.email.toLowerCase()){
-      return "Novo email já esta sendo usado por uma outra conta"
+    if(this.validarEmailLivre(alunoNovaInstancia.Email)==false && alunoNovaInstancia.Email.toLowerCase() !== alunoInstanciaAntiga.Email.toLowerCase()){
+      return "Novo Email já esta sendo usado por uma outra conta"
     }
 
     const alunoIndex = alunos.findIndex(
-      elemento => elemento.email.toLowerCase() == alunoInstanciaAntiga.email.toLowerCase());
+      elemento => elemento.Email.toLowerCase() == alunoInstanciaAntiga.Email.toLowerCase());
 
     if(alunoIndex!==-1){
       alunos[alunoIndex] = alunoNovaInstancia;
@@ -93,9 +111,9 @@ export class AlunoService{
 
   }
 
-  validarEmailLivre(email:string) : boolean{
+  validarEmailLivre(Email:string) : boolean{
     const alunos = this.carregarTodosOsAlunos();
-    const retorno = alunos.findIndex(elemento => elemento.email.toLowerCase() == email.toLowerCase());
+    const retorno = alunos.findIndex(elemento => elemento.Email.toLowerCase() == Email.toLowerCase());
     if(retorno!==-1){
       return false
     }
