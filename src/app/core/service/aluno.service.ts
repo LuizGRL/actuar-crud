@@ -43,10 +43,10 @@ export class AlunoService{
   }
 
   atualizarAlunos() {
-    this.getAlunos().subscribe(alunos => {
-      this.alunosSubject.next(alunos);
-    });
+    const alunos = this.carregarTodosOsAlunos();
+    this.alunosSubject.next(alunos);
   }
+
 
   criarAluno(aluno: Aluno): Observable<string> {
     return new Observable(observer => {
@@ -74,22 +74,33 @@ export class AlunoService{
   }
 
 
-  removerAluno(aluno: Aluno) : string{
-    const alunos = this.carregarTodosOsAlunos();
+  removerAluno(aluno: Aluno): Observable<string> {
+    return new Observable(observer => {
+      const alunos = this.carregarTodosOsAlunos();
 
-    if(alunos.length<1){
-      return "Não existem elementos para serem excluidos";
-    }
+      if (alunos.length < 1) {
+        observer.next("Não existem elementos para serem excluídos");
+        observer.complete();
+        return;
+      }
 
-    const indexAluno = alunos.findIndex(elemento => elemento.Email.toLowerCase() == aluno.Email.toLowerCase())
+      const indexAluno = alunos.findIndex(elemento => elemento.Email.toLowerCase() === aluno.Email.toLowerCase());
 
-    if(indexAluno==-1){
-      return "Aluno não econtrado";
-    }
+      if (indexAluno === -1) {
+        observer.next("Aluno não encontrado");
+        observer.complete();
+        return;
+      }
 
-    alunos.splice(indexAluno,1);
-    localStorage.setItem('alunos', JSON.stringify(alunos));
-    return "Removido com sucesso";
+      alunos.splice(indexAluno, 1);
+
+      localStorage.setItem('alunos', JSON.stringify(alunos));
+
+      this.alunosSubject.next(alunos);
+
+      observer.next("Removido com sucesso");
+      observer.complete();
+    });
   }
 
   editarAluno(alunoInstanciaAntiga: Aluno, alunoNovaInstancia: Aluno): Observable<string> {

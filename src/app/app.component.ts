@@ -19,19 +19,29 @@ export class AppComponent implements AfterViewInit {
   constructor(private alunoService: AlunoService) {}
 
   ngAfterViewInit() {
+    // Verifica se há alunos já carregados no BehaviorSubject
     this.alunoService.alunos$.subscribe((data: Aluno[]) => {
-      this.alunos = data;
+      if (data.length > 0) {
+        this.alunos = data;
+        console.log(data)
+
+      }
     });
 
+    // Carrega os alunos do localStorage
     const storedAlunos = this.alunoService.carregarTodosOsAlunos();
-    if (storedAlunos.length > 0 && storedAlunos[0] != null) {
-      this.alunos = storedAlunos;
+    console.log(storedAlunos)
+
+    if (storedAlunos.length > 0) {
+      // Caso tenha alunos no localStorage, atualiza o BehaviorSubject
+      this.alunoService.atualizarAlunos();
     } else {
+      // Caso não tenha alunos, carrega da API e salva no localStorage
       this.alunoService.getAlunos().subscribe((data: Aluno[]) => {
         this.alunos = data;
         this.alunoService.salvarAlunosApiNoLocalStorage(this.alunos);
+        this.alunoService.atualizarAlunos(); // Atualiza o BehaviorSubject com os dados da API
       });
     }
   }
-
 }

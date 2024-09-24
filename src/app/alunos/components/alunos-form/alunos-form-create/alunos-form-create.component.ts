@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { Aluno } from '../../../../core/entity/aluno.model';
 import { AlunoService } from '../../../../core/service/aluno.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 
 @Component({
@@ -27,13 +29,14 @@ import { AlunoService } from '../../../../core/service/aluno.service';
     MatNativeDateModule,
     MatSelectModule,
     CommonModule,
+    MatSnackBarModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './alunos-form-create.component.html',
-  styleUrls: ['./alunos-form-create.component.scss'], // Corrigido para styleUrls
+  styleUrls: ['./alunos-form-create.component.scss'],
 })
 export class AlunosFormCreateComponent {
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  private snackBar = inject(MatSnackBar);
   alunoForm: FormGroup;
 
   constructor(private alunoService: AlunoService) {
@@ -58,10 +61,16 @@ export class AlunosFormCreateComponent {
         (mensagem) => {
           console.log(mensagem);
           this.alunoForm.reset();
-          location.reload();
+          this.alunoService.atualizarAlunos();
+          this.snackBar.open(`${mensagem}`, 'Fechar', {
+            duration: 2000,
+          });
+
         },
         (error) => {
-          console.error('Erro ao criar aluno:', error);
+          this.snackBar.open(`${error}`, 'Fechar', {
+            duration: 2000,
+          });
         }
       );
     } else {

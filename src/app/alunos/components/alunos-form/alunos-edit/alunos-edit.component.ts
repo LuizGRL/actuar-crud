@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { Aluno } from '../../../../core/entity/aluno.model';
 import { AlunoService } from '../../../../core/service/aluno.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-alunos-edit',
@@ -27,13 +29,16 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     MatNativeDateModule,
     MatSelectModule,
     CommonModule,
+    MatSnackBarModule,
   ],
   templateUrl: './alunos-edit.component.html',
   styleUrl: './alunos-edit.component.scss'
 })
 export class AlunosEditComponent {
+  private snackBar = inject(MatSnackBar);
   alunoForm: FormGroup;
   instanciaAntiga: Aluno;
+
 
   constructor(
     private alunoService: AlunoService,
@@ -61,10 +66,15 @@ export class AlunosEditComponent {
         (mensagem) => {
           console.log(mensagem);
           this.alunoForm.reset();
-          location.reload();
+          this.alunoService.atualizarAlunos();
+          this.snackBar.open(`${mensagem}`, 'Fechar', {
+            duration: 2000,
+          });
         },
         (error) => {
-          console.error('Erro ao editar aluno:', error);
+          this.snackBar.open(`${error}`, 'Fechar', {
+            duration: 2000,
+          });
         }
       );
     } else {

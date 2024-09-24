@@ -10,11 +10,13 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { AlunosFormCreateComponent } from "../alunos-form/alunos-form-create/alunos-form-create.component";
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlunosEditComponent } from '../alunos-form/alunos-edit/alunos-edit.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-alunos-table',
   standalone: true,
-  imports: [MatTableModule, MatDialogModule, MatSortModule, MatPaginatorModule, CommonModule, ToolbarComponent, AlunosFormCreateComponent],
+  imports: [MatTableModule, MatSnackBarModule, MatDialogModule, MatSortModule, MatPaginatorModule, CommonModule, ToolbarComponent, AlunosFormCreateComponent],
   templateUrl: './alunos-table.component.html',
   styleUrl: './alunos-table.component.scss'
 })
@@ -23,6 +25,8 @@ export class AlunosTableComponent implements AfterViewInit  {
   private _liveAnnouncer = inject(LiveAnnouncer);
   private alunoService = inject(AlunoService);
   readonly dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+
 
 
   clickedRows = new Set<Aluno>();
@@ -58,11 +62,23 @@ export class AlunosTableComponent implements AfterViewInit  {
       console.log(`Dialog result: ${aluno.Nome}`);
     });
   }
+
   removerAluno(aluno: Aluno){
-    const resultado = this.alunoService.removerAluno(aluno);
-    console.log(resultado);
-    location.reload();
-    this.alunoService.atualizarAlunos();
+    this.alunoService.removerAluno(aluno).subscribe(mensagem => {
+      this.alunoService.atualizarAlunos();
+      this.snackBar.open(`${mensagem}`, 'Fechar', {
+        duration: 10000,
+      });
+
+    },
+    (error)=>{
+      this.snackBar.open(`${error}`, 'Fechar', {
+        duration: 2000,
+      });
+    }
+  );
+
+
   }
   }
 

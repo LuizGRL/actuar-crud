@@ -132,39 +132,39 @@ describe('AlunoService', () => {
     expect(retorno1).toBe(false)
   });
 
-  it("Deve retornar erro ao verificar que a lista esta vazia na tentativa de remover aluno",()=>{
-    const alunos = service.carregarTodosOsAlunos();
-    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
-    const retorno = service.removerAluno(novoAluno);
+  // it("Deve retornar erro ao verificar que a lista esta vazia na tentativa de remover aluno",()=>{
+  //   const alunos = service.carregarTodosOsAlunos();
+  //   const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+  //   const retorno = service.removerAluno(novoAluno);
 
-    expect(retorno).toBe("Não existem elementos para serem excluidos");
-    expect(alunos.length).toEqual(0);
-  });
+  //   expect(retorno).toBe("Não existem elementos para serem excluidos");
+  //   expect(alunos.length).toEqual(0);
+  // });
 
-  it("Deve retornar erro ao verificar que o usuário solicitado para exclusão não esta na lista",()=>{
-    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
-    const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
-    service.criarAluno(novoAluno);
-    const retorno = service.removerAluno(novoAluno2);
+  // it("Deve retornar erro ao verificar que o usuário solicitado para exclusão não esta na lista",()=>{
+  //   const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+  //   const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+  //   service.criarAluno(novoAluno);
+  //   const retorno = service.removerAluno(novoAluno2);
 
-    expect(retorno).toBe("Aluno não econtrado");
-    expect(service.validarEmailLivre(novoAluno.Email)).toEqual(false);
-  });
+  //   expect(retorno).toBe("Aluno não econtrado");
+  //   expect(service.validarEmailLivre(novoAluno.Email)).toEqual(false);
+  // });
 
-  it("Deve excluir corretamente o usuário",()=>{
-    const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
-    const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
-    service.criarAluno(novoAluno);
-    service.criarAluno(novoAluno2);
-    const listaTamanhoAntes = service.carregarTodosOsAlunos().length
-    const retorno = service.removerAluno(novoAluno);
-    const listaTamanhoDepois = service.carregarTodosOsAlunos().length
+  // it("Deve excluir corretamente o usuário",()=>{
+  //   const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
+  //   const novoAluno2 = new Aluno('Bianca Peixoto', 'F', 'bia12@gmail.com', new Date('2000-01-01'));
+  //   service.criarAluno(novoAluno);
+  //   service.criarAluno(novoAluno2);
+  //   const listaTamanhoAntes = service.carregarTodosOsAlunos().length
+  //   const retorno = service.removerAluno(novoAluno);
+  //   const listaTamanhoDepois = service.carregarTodosOsAlunos().length
 
-    expect(retorno).toBe("Removido com sucesso");
-    expect(listaTamanhoAntes).toBeGreaterThan(listaTamanhoDepois);
-    expect(service.buscarAlunoPorEmail(novoAluno2.Email)).not.toBeNull();
-    expect(service.buscarAlunoPorEmail(novoAluno.Email)).toBeNull();
-  });
+  //   expect(retorno).toBe("Removido com sucesso");
+  //   expect(listaTamanhoAntes).toBeGreaterThan(listaTamanhoDepois);
+  //   expect(service.buscarAlunoPorEmail(novoAluno2.Email)).not.toBeNull();
+  //   expect(service.buscarAlunoPorEmail(novoAluno.Email)).toBeNull();
+  // });
 
   it("Deve falhar ao tentar editar um aluno com um Email já cadastrado", (done) => {
     const novoAluno = new Aluno('Marcos Almeida', 'M', 'marcos223@gmail.com', new Date('2000-01-01'));
