@@ -1,6 +1,6 @@
 <body>
   <div class="toolbar-container">
-    <app-toolbar></app-toolbar>
+    <app-toolbar (keyup)="applyFilter($event)"></app-toolbar>
   </div>
   <div class="table-container">
     <table mat-table [dataSource]="data" matSort>

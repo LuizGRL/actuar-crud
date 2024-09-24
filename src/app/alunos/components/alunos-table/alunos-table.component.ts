@@ -76,10 +76,17 @@ export class AlunosTableComponent implements AfterViewInit  {
         duration: 2000,
       });
     }
-  );
+  );}
 
+  applyFilter(filtro: Event) {
+    const valor = (filtro.target as HTMLInputElement).value.toLowerCase()
+    this.data.filterPredicate = (data: Aluno, valor : string) => {
+      return data.Nome.toLowerCase().includes(valor) ||
+      data.Email.toLowerCase().includes(valor);
+    };
+    this.data.filter=valor;
+  }
 
-  }
-  }
+}
 
 

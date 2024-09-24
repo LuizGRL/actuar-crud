@@ -1,1 +1,4 @@
-<button mat-button (click)="openDialog()">Open dialog</button>
+<div class="toolbar">
+  <button mat-button (click)="openDialog()">Adicionar Aluno</button>
+    <input matInput type="text" (keyup)="changeFilter($event)" placeholder="Filter">
+</div>
