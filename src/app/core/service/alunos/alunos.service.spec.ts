@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AlunoService } from './aluno.service';
-import { Aluno } from '../entity/aluno.model';
+import { Aluno } from '../../entity/aluno.model';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import {HttpClientModule} from '@angular/common/http';
 

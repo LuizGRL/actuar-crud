@@ -10,7 +10,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { Aluno } from '../../../../core/entity/aluno.model';
-import { AlunoService } from '../../../../core/service/aluno.service';
+import { AlunoService } from '../../../../core/service/alunos/aluno.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 

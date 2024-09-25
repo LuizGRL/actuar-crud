@@ -5,18 +5,19 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort,MatSortModule,Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { AlunoService } from '../../../core/service/aluno.service';
+import { AlunoService } from '../../../core/service/alunos/aluno.service';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { AlunosFormCreateComponent } from "../alunos-form/alunos-form-create/alunos-form-create.component";
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlunosEditComponent } from '../alunos-form/alunos-edit/alunos-edit.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmDeleteDialogComponent } from '../../../shared/components/remove-dialog/remove-dialog.component';
 
 
 @Component({
   selector: 'app-alunos-table',
   standalone: true,
-  imports: [MatTableModule, MatSnackBarModule, MatDialogModule, MatSortModule, MatPaginatorModule, CommonModule, ToolbarComponent, AlunosFormCreateComponent],
+  imports: [MatTableModule,MatSnackBarModule, MatDialogModule, MatSortModule, MatPaginatorModule, CommonModule, ToolbarComponent, AlunosFormCreateComponent],
   templateUrl: './alunos-table.component.html',
   styleUrl: './alunos-table.component.scss'
 })
@@ -63,20 +64,29 @@ export class AlunosTableComponent implements AfterViewInit  {
     });
   }
 
-  removerAluno(aluno: Aluno){
-    this.alunoService.removerAluno(aluno).subscribe(mensagem => {
-      this.alunoService.atualizarAlunos();
-      this.snackBar.open(`${mensagem}`, 'Fechar', {
-        duration: 10000,
-      });
+  removerAluno(aluno: Aluno) {
+    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      data: { nome: aluno.Nome },
+    });
 
-    },
-    (error)=>{
-      this.snackBar.open(`${error}`, 'Fechar', {
-        duration: 2000,
-      });
-    }
-  );}
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.alunoService.removerAluno(aluno).subscribe(
+          (mensagem) => {
+            this.alunoService.atualizarAlunos();
+            this.snackBar.open(`${mensagem}`, 'Fechar', {
+              duration: 10000,
+            });
+          },
+          (error) => {
+            this.snackBar.open(`${error}`, 'Fechar', {
+              duration: 2000,
+            });
+          }
+        );
+      }
+    });
+  }
 
   applyFilter(filtro: Event) {
     const valor = (filtro.target as HTMLInputElement).value.toLowerCase()

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AlunoService } from './core/service/aluno.service';
+import { AlunoService } from './core/service/alunos/aluno.service';
 import { Aluno } from './core/entity/aluno.model';
 import { CommonModule } from '@angular/common';
 import { AlunosTableComponent } from "./alunos/components/alunos-table/alunos-table.component";

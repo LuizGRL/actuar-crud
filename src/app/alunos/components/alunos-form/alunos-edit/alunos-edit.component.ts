@@ -10,7 +10,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { Aluno } from '../../../../core/entity/aluno.model';
-import { AlunoService } from '../../../../core/service/aluno.service';
+import { AlunoService } from '../../../../core/service/alunos/aluno.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -52,6 +52,26 @@ export class AlunosEditComponent {
     this.instanciaAntiga = this.data
     console.log(this.instanciaAntiga)
   }
+
+  copiarAluno() {
+    const alunoString = `
+      Nome: ${this.alunoForm.get('Nome')?.value}
+      Email: ${this.alunoForm.get('Email')?.value}
+      Data de Nascimento: ${this.alunoForm.get('DataNascimento')?.value}
+      Sexo: ${this.alunoForm.get('Sexo')?.value}
+    `;
+
+    navigator.clipboard.writeText(alunoString).then(
+      () => {
+        this.snackBar.open('Dados copiados com sucesso!', 'Fechar', { duration: 2000 });
+      },
+      (err) => {
+        this.snackBar.open('Falha ao copiar os dados', 'Fechar', { duration: 2000 });
+        console.error('Erro ao copiar: ', err);
+      }
+    );
+  }
+
 
   editarAluno() {
     if (this.alunoForm.valid) {

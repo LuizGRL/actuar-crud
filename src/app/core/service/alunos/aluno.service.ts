@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Aluno } from "../entity/aluno.model";
+import { Aluno } from "../../entity/aluno.model";
 import { HttpClient } from "@angular/common/http";
 import { HttpClientModule } from '@angular/common/http';
 import { elementAt, Observable, map ,tap , of, BehaviorSubject } from "rxjs";
