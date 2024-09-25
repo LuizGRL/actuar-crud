@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.toolbar-container {
+  padding: 10px;
+}
+
+.table-container {
+  padding: 20px;
+  overflow-x: auto;
+  background-color: grey;
+
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mat-header-cell, .mat-cell {
+  text-align: center; /* Centraliza o texto */
+  padding: 8px; /* Ajuste de preenchimento */
+}
+
+button {
+  margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    position: sticky; // deixando no stick o rolamento fica mais fluido, mas acho que é bom ver outra forma dps
+  }
+
+  th.mat-header-cell, td.mat-cell {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  button {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+}

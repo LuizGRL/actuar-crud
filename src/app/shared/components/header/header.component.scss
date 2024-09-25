@@ -1,0 +1,31 @@
+
+
+header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+
+
+}
+header .logo-container{
+  background: rgb(0, 0, 0);
+  backdrop-filter: blur(20px);
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+header .text-container{
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items: center;
+font-size: 20px;
+font-family: GilroyRegular;
+color: var(--azul);
+}

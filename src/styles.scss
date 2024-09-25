@@ -4,3 +4,34 @@
   --vermelho: #ef5350;
 
 }
+:root{
+  --azul: #2196f3;
+  --vermelho: #ef5350;
+
+}
+
+@font-face{
+  font-family: GilroyRegular ;
+  src: url('../src/assets/fonts/Gilroy-Regular.ttf') format("truetype");
+}
+@font-face{
+  font-family: GilroyLight ;
+  src: url('../src/assets/fonts/Gilroy-Light.ttf') format("truetype");
+}
+@font-face{
+  font-family: GilRoyBold ;
+  src: url('../src/assets/fonts/Gilroy-Bold.ttf') format("truetype");
+}
+@font-face{
+  font-family: GilroySemiBold ;
+  src: url('../src/assets/fonts/Gilroy-SemiBold.ttf') format("truetype");
+}
+
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+
+html, body { height: 100%; }

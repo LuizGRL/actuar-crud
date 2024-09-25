@@ -30,7 +30,7 @@ export class AlunosTableComponent implements AfterViewInit  {
 
 
   clickedRows = new Set<Aluno>();
-  columns: string[] = ['Nome', 'Email', 'DataNascimento','Sexo',"Ações"];
+  columns: string[] = ['Nome', 'Email', 'DataNascimento','Sexo',"Acoes"];
   data = new MatTableDataSource<Aluno>();
 
   @ViewChild(MatSort) sort: MatSort;
