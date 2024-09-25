@@ -63,10 +63,10 @@ export class AlunosEditComponent {
 
     navigator.clipboard.writeText(alunoString).then(
       () => {
-        this.snackBar.open('Dados copiados com sucesso!', 'Fechar', { duration: 2000 });
+        this.snackBar.open('Dados copiados com sucesso!', '', { duration: 2000, panelClass:["blue-snackbar"]});
       },
       (err) => {
-        this.snackBar.open('Falha ao copiar os dados', 'Fechar', { duration: 2000 });
+        this.snackBar.open('Falha ao copiar os dados', '', { duration: 2000, panelClass:["red-snackbar"] });
         console.error('Erro ao copiar: ', err);
       }
     );
@@ -87,13 +87,15 @@ export class AlunosEditComponent {
           console.log(mensagem);
           this.alunoForm.reset();
           this.alunoService.atualizarAlunos();
-          this.snackBar.open(`${mensagem}`, 'Fechar', {
+          this.snackBar.open(`${mensagem}`, '', {
             duration: 2000,
+            panelClass:["green-snackbar"]
           });
         },
         (error) => {
-          this.snackBar.open(`${error}`, 'Fechar', {
+          this.snackBar.open(`${error}`, '', {
             duration: 2000,
+            panelClass:["red-snackbar"]
           });
         }
       );

@@ -1,14 +1,4 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
-:root{
-  --azul: #2196f3;
-  --vermelho: #ef5350;
-
-}
-:root{
-  --azul: #2196f3;
-  --vermelho: #ef5350;
-
-}
 
 @font-face{
   font-family: GilroyRegular ;
@@ -35,3 +25,29 @@
 
 
 html, body { height: 100%; }
+
+.red-snackbar simple-snack-bar,
+.green-snackbar simple-snack-bar,
+.blue-snackbar simple-snack-bar {
+  display: flex; /* Usando flexbox para alinhamento */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 100%; /* Garante que o snack-bar ocupe toda a altura */
+  text-align: center; /* Alinha o texto ao centro */
+  padding: 16px; /* Adicione padding para espaçamento interno, se necessário */
+}
+
+.red-snackbar simple-snack-bar  {
+  background: linear-gradient(to right, #F44336 70%, #333333);
+  color: white;
+}
+
+.green-snackbar simple-snack-bar {
+  background: linear-gradient(to right, #0ab118 60%, #333333);
+  color: white;
+}
+
+.blue-snackbar simple-snack-bar {
+  background: linear-gradient(to right, #0a31b1 60%, #333333);
+  color: white;
+}

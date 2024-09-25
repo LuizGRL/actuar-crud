@@ -19,7 +19,6 @@ export class AlunoService{
         const apiAlunos = response.map(aluno =>
           new Aluno(aluno.Nome, aluno.Sexo, aluno.Email, new Date(aluno.DataNascimento))
         );
-        console.log(apiAlunos)
         const localAlunos = this.carregarTodosOsAlunos();
         return [...apiAlunos, ...localAlunos];
       })
@@ -51,7 +50,7 @@ export class AlunoService{
   criarAluno(aluno: Aluno): Observable<string> {
     return new Observable(observer => {
       if (aluno.Nome.length <= 0 || aluno.Sexo.length <= 0 || aluno.Email.length <= 0 || aluno.DataNascimento == null) {
-        observer.next("nenhum campo pode ser nulo");
+        observer.error("nenhum campo pode ser nulo");
         observer.complete();
         return;
       }
@@ -60,7 +59,7 @@ export class AlunoService{
 
       if (alunos.length > 0) {
         if (!this.validarEmailLivre(aluno.Email)) {
-          observer.next("Erro, Email já foi cadastrado no sistema");
+          observer.error("Erro, Email já foi cadastrado no sistema");
           observer.complete();
           return;
         }
@@ -79,7 +78,7 @@ export class AlunoService{
       const alunos = this.carregarTodosOsAlunos();
 
       if (alunos.length < 1) {
-        observer.next("Não existem elementos para serem excluídos");
+        observer.error("Não existem elementos para serem excluídos");
         observer.complete();
         return;
       }
@@ -87,7 +86,7 @@ export class AlunoService{
       const indexAluno = alunos.findIndex(elemento => elemento.Email.toLowerCase() === aluno.Email.toLowerCase());
 
       if (indexAluno === -1) {
-        observer.next("Aluno não encontrado");
+        observer.error("Aluno não encontrado");
         observer.complete();
         return;
       }
@@ -104,24 +103,39 @@ export class AlunoService{
   }
 
   editarAluno(alunoInstanciaAntiga: Aluno, alunoNovaInstancia: Aluno): Observable<string> {
-    const alunos = this.carregarTodosOsAlunos();
+    return new Observable(observer => {
+      const alunos = this.carregarTodosOsAlunos();
 
-    if (!this.validarEmailLivre(alunoNovaInstancia.Email) && alunoNovaInstancia.Email.toLowerCase() !== alunoInstanciaAntiga.Email.toLowerCase()) {
-      return of("Novo Email já está sendo usado por uma outra conta");
-    }
+      // Verifica se o novo email já está sendo utilizado
+      if (!this.validarEmailLivre(alunoNovaInstancia.Email) &&
+          alunoNovaInstancia.Email.toLowerCase() !== alunoInstanciaAntiga.Email.toLowerCase()) {
+        observer.error("Novo Email já está sendo usado por uma outra conta");
+        observer.complete();
+        return;
+      }
 
-    const alunoIndex = alunos.findIndex(
-      elemento => elemento.Email.toLowerCase() === alunoInstanciaAntiga.Email.toLowerCase()
-    );
+      // Encontra o índice do aluno a ser editado
+      const alunoIndex = alunos.findIndex(
+        elemento => elemento.Email.toLowerCase() === alunoInstanciaAntiga.Email.toLowerCase()
+      );
 
-    if (alunoIndex !== -1) {
-      alunos[alunoIndex] = alunoNovaInstancia;
-      localStorage.setItem('alunos', JSON.stringify(alunos));
-      return of("Aluno editado com sucesso");
-    } else {
-      return of("Aluno não encontrado");
-    }
+      if (alunoIndex !== -1) {
+        // Atualiza a lista de alunos
+        alunos[alunoIndex] = alunoNovaInstancia;
+        localStorage.setItem('alunos', JSON.stringify(alunos));
+
+        // Notifica a atualização dos alunos
+        this.alunosSubject.next(alunos);
+
+        observer.next("Aluno editado com sucesso");
+        observer.complete();
+      } else {
+        observer.error("Aluno não encontrado");
+        observer.complete();
+      }
+    });
   }
+
 
   validarEmailLivre(Email:string) : boolean{
     const alunos = this.carregarTodosOsAlunos();

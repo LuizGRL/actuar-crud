@@ -62,14 +62,17 @@ export class AlunosFormCreateComponent {
           console.log(mensagem);
           this.alunoForm.reset();
           this.alunoService.atualizarAlunos();
-          this.snackBar.open(`${mensagem}`, 'Fechar', {
+          this.snackBar.open(`${mensagem}`, '', {
             duration: 2000,
+            panelClass:["green-snackbar"]
           });
 
         },
         (error) => {
-          this.snackBar.open(`${error}`, 'Fechar', {
+          this.snackBar.open(`${error}`, '', {
             duration: 2000,
+            panelClass:["red-snackbar"]
+
           });
         }
       );

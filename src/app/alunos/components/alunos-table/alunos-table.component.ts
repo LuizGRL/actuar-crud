@@ -74,13 +74,16 @@ export class AlunosTableComponent implements AfterViewInit  {
         this.alunoService.removerAluno(aluno).subscribe(
           (mensagem) => {
             this.alunoService.atualizarAlunos();
-            this.snackBar.open(`${mensagem}`, 'Fechar', {
-              duration: 10000,
+            this.snackBar.open(`${mensagem}`, '', {
+              duration: 2000,
+              panelClass: ['green-snackbar'],
+
             });
           },
           (error) => {
             this.snackBar.open(`${error}`, 'Fechar', {
               duration: 2000,
+              panelClass: ['red-snackbar'],
             });
           }
         );

@@ -14,7 +14,7 @@ import { HeaderComponent } from "./shared/components/header/header.component";
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements AfterViewInit {
-  title = 'actuar-crud';
+  title = 'Gestão de alunos actuar';
   alunos: Aluno[] = [];
 
   constructor(private alunoService: AlunoService) {}
@@ -23,12 +23,10 @@ export class AppComponent implements AfterViewInit {
     this.alunoService.alunos$.subscribe((data: Aluno[]) => {
       if (data.length > 0) {
         this.alunos = data;
-        console.log(data)
       }
     });
 
     const storedAlunos = this.alunoService.carregarTodosOsAlunos();
-    console.log(storedAlunos)
 
     if (storedAlunos.length > 0) {
       this.alunoService.atualizarAlunos();
