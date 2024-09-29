@@ -5,12 +5,43 @@ body {
 
 .toolbar-container {
   padding: 10px;
+
+}
+.editar{
+  padding: 0.8rem;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.editar:hover{
+  background-color: #0c7cd5;
+}
+
+.excluir{
+  padding: 0.8rem;
+  background-color: #f32121;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.excluir:hover{
+  background-color: #d10606;
 }
 
 .table-container {
   padding: 20px;
   overflow-x: auto;
-  background-color: grey;
+  background-color: #f5f5f5;
+  padding: 10px;
 
 }
 
@@ -20,8 +51,8 @@ table {
 }
 
 .mat-header-cell, .mat-cell {
-  text-align: center; /* Centraliza o texto */
-  padding: 8px; /* Ajuste de preenchimento */
+  text-align: center;
+  padding: 8px;
 }
 
 button {

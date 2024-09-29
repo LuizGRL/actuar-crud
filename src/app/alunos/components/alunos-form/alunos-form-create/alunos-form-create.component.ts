@@ -13,8 +13,6 @@ import { Aluno } from '../../../../core/entity/aluno.model';
 import { AlunoService } from '../../../../core/service/alunos/aluno.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
-
-
 @Component({
   selector: 'app-alunos-form-create',
   standalone: true,
@@ -29,17 +27,19 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatNativeDateModule,
     MatSelectModule,
     CommonModule,
-    MatSnackBarModule,
-  ],
+    MatSnackBarModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './alunos-form-create.component.html',
   styleUrls: ['./alunos-form-create.component.scss'],
 })
+
 export class AlunosFormCreateComponent {
+
   private snackBar = inject(MatSnackBar);
   alunoForm: FormGroup;
 
   constructor(private alunoService: AlunoService) {
+
     this.alunoForm = new FormGroup({
       Nome: new FormControl('', Validators.required),
       Email: new FormControl('', [Validators.required, Validators.email]),
@@ -49,6 +49,7 @@ export class AlunosFormCreateComponent {
   }
 
   salvarAluno() {
+
     if (this.alunoForm.valid) {
       const aluno: Aluno = new Aluno(
         this.alunoForm.get('Nome')!.value,
@@ -66,13 +67,11 @@ export class AlunosFormCreateComponent {
             duration: 2000,
             panelClass:["green-snackbar"]
           });
-
         },
         (error) => {
           this.snackBar.open(`${error}`, '', {
             duration: 2000,
             panelClass:["red-snackbar"]
-
           });
         }
       );

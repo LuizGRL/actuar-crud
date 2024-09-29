@@ -1,0 +1,10 @@
+<div class="remove-dialog-container" >
+  <h1 >Confirmar Exclusão</h1>
+  <div class="dialog-text">
+    <p>Tem certeza de que deseja excluir o aluno <strong>{{ data.nome }}</strong>?</p>
+  </div>
+  <div class="buttons-container">
+    <button class="cancelar" (click)="onCancel()">Cancelar</button>
+    <button class="excluir" (click)="onConfirm()">Excluir</button>
+  </div>
+</div>

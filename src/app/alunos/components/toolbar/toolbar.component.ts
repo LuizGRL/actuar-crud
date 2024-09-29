@@ -14,7 +14,14 @@ export class ToolbarComponent {
   readonly dialog = inject(MatDialog);
 
   openDialog() {
-    const dialogRef = this.dialog.open(AlunosFormCreateComponent);
+    const dialogRef = this.dialog.open(AlunosFormCreateComponent,
+    {
+    width: '90%',
+    maxWidth: '500px',
+    height: 'auto',
+    maxHeight: '90vh',
+    });
+
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });

@@ -1,0 +1,49 @@
+.remove-dialog-container {
+  max-width: 400px;
+  text-align: center;
+  font-family: GilroyRegular;
+
+}
+
+h1 {
+  padding: 16px;
+  font-size: 24px;
+}
+
+.dialog-text{
+  padding: 10px;
+}
+.buttons-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 20px 20px;
+}
+
+.cancelar{
+  padding: 0.8rem;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cancelar:hover{
+  background-color: #0c7cd5;
+}
+
+.excluir{
+  padding: 0.8rem;
+  background-color: #f32121;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.excluir:hover{
+  background-color: #d10606;
+}

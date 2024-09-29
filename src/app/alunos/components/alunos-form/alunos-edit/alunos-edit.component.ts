@@ -11,7 +11,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { Aluno } from '../../../../core/entity/aluno.model';
 import { AlunoService } from '../../../../core/service/alunos/aluno.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 
@@ -29,19 +29,20 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatNativeDateModule,
     MatSelectModule,
     CommonModule,
-    MatSnackBarModule,
-  ],
+    MatSnackBarModule],
   templateUrl: './alunos-edit.component.html',
   styleUrl: './alunos-edit.component.scss'
 })
+
 export class AlunosEditComponent {
   private snackBar = inject(MatSnackBar);
   alunoForm: FormGroup;
   instanciaAntiga: Aluno;
 
-
   constructor(
+    private dialogRef: MatDialogRef<AlunosEditComponent>, //necessário para fechar a dialog
     private alunoService: AlunoService,
+
     @Inject(MAT_DIALOG_DATA) public data: Aluno){
       this.alunoForm = new FormGroup({
       Nome: new FormControl(this.data.Nome, Validators.required),
@@ -54,6 +55,7 @@ export class AlunosEditComponent {
   }
 
   copiarAluno() {
+
     const alunoString = `
       Nome: ${this.alunoForm.get('Nome')?.value}
       Email: ${this.alunoForm.get('Email')?.value}
@@ -61,26 +63,24 @@ export class AlunosEditComponent {
       Sexo: ${this.alunoForm.get('Sexo')?.value}
     `;
 
-    navigator.clipboard.writeText(alunoString).then(
-      () => {
-        this.snackBar.open('Dados copiados com sucesso!', '', { duration: 2000, panelClass:["blue-snackbar"]});
-      },
-      (err) => {
-        this.snackBar.open('Falha ao copiar os dados', '', { duration: 2000, panelClass:["red-snackbar"] });
-        console.error('Erro ao copiar: ', err);
-      }
-    );
+    navigator.clipboard.writeText(alunoString).then( () => {
+          this.snackBar.open('Dados copiados com sucesso!', '', { duration: 2000, panelClass: ["blue-snackbar"] });
+          this.dialogRef.close
+        },
+        (err) => {
+          this.snackBar.open('Falha ao copiar os dados', '', { duration: 2000, panelClass: ["red-snackbar"] });
+          console.error('Erro ao copiar: ', err);
+        });
   }
 
-
   editarAluno() {
+
     if (this.alunoForm.valid) {
       const aluno: Aluno = new Aluno(
         this.alunoForm.get('Nome')!.value,
         this.alunoForm.get('Sexo')!.value,
         this.alunoForm.get('Email')!.value,
-        new Date(this.alunoForm.get('DataNascimento')!.value)
-      );
+        new Date(this.alunoForm.get('DataNascimento')!.value));
 
       this.alunoService.editarAluno(this.instanciaAntiga, aluno).subscribe(
         (mensagem) => {
@@ -91,16 +91,16 @@ export class AlunosEditComponent {
             duration: 2000,
             panelClass:["green-snackbar"]
           });
+          this.dialogRef.close()
         },
         (error) => {
           this.snackBar.open(`${error}`, '', {
             duration: 2000,
             panelClass:["red-snackbar"]
           });
-        }
-      );
+        });
     } else {
-      console.log('Formulário inválido');
+      console.log('erro no formulario');
     }
   }
 

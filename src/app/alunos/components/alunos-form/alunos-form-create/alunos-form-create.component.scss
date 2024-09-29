@@ -1,16 +1,22 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 form {
+  width: 100%;
   max-width: 500px;
-  margin: 0 auto;
   padding: 2rem;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #212529;
 }
 
 form div {
   margin-bottom: 1.5rem;
+  width: 100%;
+  text-align: center;
 }
 
 label {
@@ -19,7 +25,6 @@ label {
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #212529;
-
 }
 
 input[type="text"],
@@ -33,6 +38,7 @@ select {
   border-radius: 10px;
   border-color: #ced4da;
   transition: border-color 0.3s ease;
+  margin: 0 auto;
 }
 
 input:focus,
@@ -53,17 +59,14 @@ button[type="submit"] {
   color: #fff;
   border: none;
   border-radius: 10px;
+  margin: 1.5rem auto 0;
+  cursor: pointer;
+  line-height: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button[type="submit"]:hover {
   background-color: #0c7cd5;
-}
-
-/* Centralizando o formulário na tela */
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #eef2f3;
 }

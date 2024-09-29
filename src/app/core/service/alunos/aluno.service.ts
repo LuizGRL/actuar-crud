@@ -106,7 +106,6 @@ export class AlunoService{
     return new Observable(observer => {
       const alunos = this.carregarTodosOsAlunos();
 
-      // Verifica se o novo email já está sendo utilizado
       if (!this.validarEmailLivre(alunoNovaInstancia.Email) &&
           alunoNovaInstancia.Email.toLowerCase() !== alunoInstanciaAntiga.Email.toLowerCase()) {
         observer.error("Novo Email já está sendo usado por uma outra conta");
@@ -114,17 +113,14 @@ export class AlunoService{
         return;
       }
 
-      // Encontra o índice do aluno a ser editado
       const alunoIndex = alunos.findIndex(
         elemento => elemento.Email.toLowerCase() === alunoInstanciaAntiga.Email.toLowerCase()
       );
 
       if (alunoIndex !== -1) {
-        // Atualiza a lista de alunos
         alunos[alunoIndex] = alunoNovaInstancia;
         localStorage.setItem('alunos', JSON.stringify(alunos));
 
-        // Notifica a atualização dos alunos
         this.alunosSubject.next(alunos);
 
         observer.next("Aluno editado com sucesso");

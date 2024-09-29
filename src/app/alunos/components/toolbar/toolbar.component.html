@@ -1,5 +1,5 @@
 <div class="toolbar">
-  <input matInput type="text" (keyup)="changeFilter($event)" placeholder="Filter">
-  <button mat-button (click)="openDialog()">Adicionar Aluno</button>
-  <button mat-button (click)="exportarDadosParaCSV('alunos.csv')">Exportar CSV</button>
+  <input matInput type="text" (keyup)="changeFilter($event)" placeholder="Filtrar">
+  <button (click)="openDialog()" class="adicionar">Adicionar Aluno</button>
+  <button  (click)="exportarDadosParaCSV('alunos.csv')" class="exportar">Exportar CSV</button>
 </div>

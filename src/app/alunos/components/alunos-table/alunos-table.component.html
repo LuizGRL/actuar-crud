@@ -28,9 +28,9 @@
       <ng-container matColumnDef="Acoes">
         <th mat-header-cell *matHeaderCellDef> Ações </th>
         <td mat-cell *matCellDef="let aluno">
-          <button mat-button (click)="openEditDialog(aluno)">Editar</button>
+          <button mat-button (click)="openEditDialog(aluno)" class="editar">Editar</button>
           <br/>
-          <button mat-button color="warn" (click)="removerAluno(aluno)">Excluir</button>
+          <button mat-button color="warn" (click)="removerAluno(aluno)" class="excluir">Excluir</button>
 
         </td>
       </ng-container>
@@ -41,7 +41,7 @@
     <mat-paginator
     [pageSize]="10"
     [pageSizeOptions]="[5, 10, 25]"
-    aria-label="Select page">
+    aria-label="Selecionar pagina">
     </mat-paginator>
 
   </div>
