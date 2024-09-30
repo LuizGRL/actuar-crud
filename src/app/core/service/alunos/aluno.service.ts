@@ -72,7 +72,6 @@ export class AlunoService{
     });
   }
 
-
   removerAluno(aluno: Aluno): Observable<string> {
     return new Observable(observer => {
       const alunos = this.carregarTodosOsAlunos();
@@ -131,7 +130,6 @@ export class AlunoService{
       }
     });
   }
-
 
   validarEmailLivre(Email:string) : boolean{
     const alunos = this.carregarTodosOsAlunos();
