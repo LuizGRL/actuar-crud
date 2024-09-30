@@ -29,12 +29,12 @@ html, body { height: 100%; }
 .red-snackbar simple-snack-bar,
 .green-snackbar simple-snack-bar,
 .blue-snackbar simple-snack-bar {
-  display: flex; /* Usando flexbox para alinhamento */
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: center; /* Centraliza verticalmente */
-  height: 100%; /* Garante que o snack-bar ocupe toda a altura */
-  text-align: center; /* Alinha o texto ao centro */
-  padding: 16px; /* Adicione padding para espaçamento interno, se necessário */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding: 16px;
 }
 
 .red-snackbar simple-snack-bar  {
